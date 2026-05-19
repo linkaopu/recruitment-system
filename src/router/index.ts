@@ -1,17 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import CandidateLayout from '@/layouts/CandidateLayout.vue'
+import HRLayout from '@/layouts/HRLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 
 const router = createRouter({
+  // 使用 HTML5 History 模式
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // ==================== 求职者端 ====================
     {
       path: '/',
-      component: () => import('@/layouts/CandidateLayout.vue'),
+      component: CandidateLayout,
       children: [
         {
           path: '',
           name: 'Home',
           component: () => import('@/views/candidate/Home.vue'),
+          // meta字段可以用来存储路由的元信息，比如标题、权限等
           meta: { title: '首页' }
         },
         {
@@ -68,7 +73,7 @@ const router = createRouter({
     // ==================== HR 后台 ====================
     {
       path: '/hr',
-      component: () => import('@/layouts/HRLayout.vue'),
+      component: HRLayout,
       meta: { roles: ['hr', 'admin'] },
       children: [
         {
@@ -104,7 +109,7 @@ const router = createRouter({
     // ==================== 管理员后台 ====================
     {
       path: '/admin',
-      component: () => import('@/layouts/AdminLayout.vue'),
+      component: AdminLayout,
       meta: { roles: ['admin'] },
       children: [
         {

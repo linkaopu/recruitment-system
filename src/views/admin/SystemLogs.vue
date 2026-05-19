@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { getSystemLogs } from '@/api/admin'
 import type { SystemLog } from '@/types'
+import type { ApiResponse, PageResponse } from '@/types'
 
 const logs = ref<SystemLog[]>([])
 const loading = ref(false)
@@ -19,11 +20,11 @@ onMounted(() => {
 async function fetchLogs() {
   loading.value = true
   try {
-    const res = await getSystemLogs({
+    const res = (await getSystemLogs({
       ...filters.value,
       page: 1,
       pageSize: 100
-    })
+    })) as unknown as ApiResponse<PageResponse<SystemLog>>
     logs.value = res.data.list
   } finally {
     loading.value = false

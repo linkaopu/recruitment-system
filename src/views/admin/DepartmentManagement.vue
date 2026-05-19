@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getDepartments, createDepartment, updateDepartment, deleteDepartment } from '@/api/admin'
-import type { Department } from '@/types'
+import type { ApiResponse, Department } from '@/types'
 
 const departments = ref<Department[]>([])
 const loading = ref(false)
@@ -21,7 +21,7 @@ onMounted(() => {
 async function fetchDepartments() {
   loading.value = true
   try {
-    const res = await getDepartments()
+    const res = (await getDepartments()) as unknown as ApiResponse<Department[]>
     departments.value = res.data
   } finally {
     loading.value = false

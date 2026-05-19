@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 import { getUsers, createUser, updateUser, deleteUser, toggleUserStatus } from '@/api/admin'
 import type { User } from '@/types'
+import type { ApiResponse, PageResponse } from '@/types'
+import { UserRole } from '@/types'
 
 const users = ref<User[]>([])
 const loading = ref(false)
@@ -12,7 +14,7 @@ const formData = ref({
   username: '',
   email: '',
   phone: '',
-  role: 'candidate' as 'candidate' | 'hr' | 'admin'
+  role: UserRole.CANDIDATE
 })
 
 onMounted(() => {
@@ -22,7 +24,7 @@ onMounted(() => {
 async function fetchUsers() {
   loading.value = true
   try {
-    const res = await getUsers({ page: 1, pageSize: 100 })
+    const res = (await getUsers({ page: 1, pageSize: 100 })) as unknown as ApiResponse<PageResponse<User>>
     users.value = res.data.list
   } finally {
     loading.value = false
@@ -78,15 +80,15 @@ function resetForm() {
     username: '',
     email: '',
     phone: '',
-    role: 'candidate'
+    role: UserRole.CANDIDATE
   }
 }
 
-function getRoleText(role: string) {
-  const map: Record<string, string> = {
-    candidate: '求职者',
-    hr: 'HR',
-    admin: '管理员'
+function getRoleText(role: UserRole) {
+  const map: Record<UserRole, string> = {
+    [UserRole.CANDIDATE]: '求职者',
+    [UserRole.HR]: 'HR',
+    [UserRole.ADMIN]: '管理员'
   }
   return map[role] || role
 }
@@ -157,9 +159,9 @@ function getRoleText(role: string) {
           <div class="form-group">
             <label>角色 <span class="required">*</span></label>
             <select v-model="formData.role">
-              <option value="candidate">求职者</option>
-              <option value="hr">HR</option>
-              <option value="admin">管理员</option>
+              <option :value="UserRole.CANDIDATE">求职者</option>
+              <option :value="UserRole.HR">HR</option>
+              <option :value="UserRole.ADMIN">管理员</option>
             </select>
           </div>
         </div>
