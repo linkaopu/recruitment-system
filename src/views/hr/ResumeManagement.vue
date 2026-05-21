@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getApplications, updateApplicationStatus } from '@/api/resume'
-import type { Application } from '@/types'
+import type { Application, ApiResponse, PageResponse } from '@/types'
+import {ResumeStatus } from '@/types'
 
 const applications = ref<Application[]>([])
 const loading = ref(false)
 
 const filters = ref({
   jobId: '',
-  status: '',
+  status: undefined as ResumeStatus | undefined,
   keyword: ''
 })
 
 const statusOptions = [
-  { value: '', label: '全部状态' },
+  { value: undefined, label: '全部状态' },
   { value: 'pending', label: '待查看' },
   { value: 'screened', label: '已初筛' },
   { value: 'interview', label: '面试中' },
@@ -28,12 +29,12 @@ onMounted(() => {
 async function fetchApplications() {
   loading.value = true
   try {
-    const res = await getApplications({
+    const res = (await getApplications({
       jobId: filters.value.jobId ? Number(filters.value.jobId) : undefined,
-      status: filters.value.status,
+      status: filters.value.status || undefined,
       page: 1,
       pageSize: 100
-    })
+    })) as unknown as ApiResponse<PageResponse<Application>>
     applications.value = res.data.list
   } finally {
     loading.value = false

@@ -2,7 +2,12 @@
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { getMyResume, createResume, updateResume, uploadResume } from '@/api/resume'
-import type { Resume, CreateResumeParams, WorkExperience, Education, ProjectExperience } from '@/types'
+import type { Resume, CreateResumeParams, ApiResponse } from '@/types'
+
+
+defineOptions({
+  name: 'ResumePage'
+})
 
 const resume = ref<Resume | null>(null)
 const loading = ref(false)
@@ -33,7 +38,7 @@ onMounted(async () => {
 async function fetchResume() {
   loading.value = true
   try {
-    const res = await getMyResume()
+    const res = (await getMyResume()) as unknown as ApiResponse<Resume>
     resume.value = res.data
     if (res.data) {
       formData.value = {
@@ -63,7 +68,7 @@ async function handleSave() {
     if (resume.value?.id) {
       await updateResume(resume.value.id, formData.value)
     } else {
-      const res = await createResume(formData.value)
+      const res = (await createResume(formData.value)) as unknown as ApiResponse<Resume>
       resume.value = res.data
     }
     alert('保存成功')
@@ -76,7 +81,7 @@ async function handleUpload(event: Event) {
   const input = event.target as HTMLInputElement
   if (input.files && input.files[0]) {
     const file = input.files[0]
-    const res = await uploadResume(file)
+    const res = (await uploadResume(file)) as unknown as ApiResponse<{ url: string; name: string }>
     formData.value.attachmentUrl = res.data.url
     formData.value.attachmentName = res.data.name
   }

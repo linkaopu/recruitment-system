@@ -4,6 +4,11 @@ import { RouterLink } from 'vue-router'
 import { getMyApplications } from '@/api/resume'
 import { useUserStore } from '@/stores/user'
 import type { Application } from '@/types'
+import type { ApiResponse, PageResponse } from '@/types'
+
+defineOptions({
+  name: 'CandidateCenter'
+})
 
 const userStore = useUserStore()
 const activeTab = ref('applications')
@@ -31,7 +36,7 @@ onMounted(() => {
 async function fetchApplications() {
   loading.value = true
   try {
-    const res = await getMyApplications()
+    const res = (await getMyApplications()) as unknown as ApiResponse<PageResponse<Application>>
     applications.value = res.data.list
   } finally {
     loading.value = false

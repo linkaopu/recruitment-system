@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { applyJob, getMyResume } from '@/api/resume'
 import type { Resume } from '@/types'
+import type { ApiResponse } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -14,11 +15,9 @@ const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const res = await getMyResume()
+    const res = (await getMyResume()) as unknown as ApiResponse<Resume>
     resumes.value = res.data ? [res.data] : []
-    if (resumes.value.length > 0) {
-      selectedResumeId.value = resumes.value[0].id
-    }
+    selectedResumeId.value = resumes.value[0]?.id ?? null
   } finally {
     loading.value = false
   }

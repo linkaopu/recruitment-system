@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getUsers, createUser, updateUser, deleteUser, toggleUserStatus } from '@/api/admin'
+import { getUsers, createUser, updateUser, deleteUser } from '@/api/admin'
 import type { User } from '@/types'
 import type { ApiResponse, PageResponse } from '@/types'
 import { UserRole } from '@/types'
@@ -54,10 +54,10 @@ async function handleDeleteUser(id: number) {
   }
 }
 
-async function handleToggleStatus(user: User) {
-  const newStatus = user.email ? 'active' : 'inactive'
-  await toggleUserStatus(user.id, newStatus)
-}
+// async function handleToggleStatus(user: User) {
+//   const newStatus = user.email ? 'active' : 'inactive'
+//   await toggleUserStatus(user.id, newStatus)
+// }
 
 function openCreateDialog() {
   resetForm()

@@ -3,15 +3,21 @@ import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { register } from '@/api/auth'
 import type { RegisterParams } from '@/types'
+import { UserRole } from '@/types'
+
+defineOptions({
+  name: 'RegisterView'
+})
 
 const router = useRouter()
+
 
 const form = ref<RegisterParams>({
   username: '',
   password: '',
   email: '',
   phone: '',
-  role: 'candidate'
+  role: UserRole.CANDIDATE
 })
 const confirmPassword = ref('')
 const loading = ref(false)

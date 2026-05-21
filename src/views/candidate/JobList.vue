@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { getJobList } from '@/api/job'
 import type { Job, JobQueryParams } from '@/types'
+import type { ApiResponse, JobListResponse } from '@/types'
 
 const jobs = ref<Job[]>([])
 const total = ref(0)
@@ -33,7 +34,7 @@ onMounted(() => {
 async function fetchJobs() {
   loading.value = true
   try {
-    const res = await getJobList(filters.value)
+    const res = (await getJobList(filters.value)) as unknown as ApiResponse<JobListResponse>
     jobs.value = res.data.list
     total.value = res.data.total
   } finally {

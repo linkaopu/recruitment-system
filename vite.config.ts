@@ -14,10 +14,15 @@ export default defineConfig({
     vueDevTools(),
     //element-plus按需引入
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({
+        importStyle: false,
+        })],
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({
+        importStyle: false,
+        directives: false, // 👈 这一行是关键！彻底关闭指令自动导入
+      })],
     }),
     
   ],

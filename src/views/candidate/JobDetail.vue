@@ -3,14 +3,14 @@ import { ref, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { getJobDetail } from '@/api/job'
 import type { Job } from '@/types'
-
+import type { ApiResponse } from '@/types'
 const route = useRoute()
 const job = ref<Job | null>(null)
 const loading = ref(true)
 
 onMounted(async () => {
   const id = Number(route.params.id)
-  const res = await getJobDetail(id)
+  const res = (await getJobDetail(id)) as unknown as ApiResponse<Job>
   job.value = res.data
   loading.value = false
 })

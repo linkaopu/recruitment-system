@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getInterviews, createInterview, updateInterviewResult } from '@/api/interview'
-import type { Interview } from '@/types'
+import type { Interview, ApiResponse, PageResponse, CreateInterviewParams } from '@/types'
+import { InterviewMethod, InterviewResult } from '@/types/interview'
 
 const interviews = ref<Interview[]>([])
 const loading = ref(false)
 const showCreateDialog = ref(false)
 
-const newInterview = ref({
+const newInterview = ref<CreateInterviewParams>({
   applicationId: 0,
   interviewer: '',
   interviewTime: '',
   location: '',
-  method: 'online' as 'online' | 'offline'
+  method: InterviewMethod.ONLINE
 })
 
 onMounted(() => {
@@ -22,7 +23,7 @@ onMounted(() => {
 async function fetchInterviews() {
   loading.value = true
   try {
-    const res = await getInterviews({ page: 1, pageSize: 100 })
+    const res = (await getInterviews({ page: 1, pageSize: 100 })) as unknown as ApiResponse<PageResponse<Interview>>
     interviews.value = res.data.list
   } finally {
     loading.value = false
@@ -30,12 +31,12 @@ async function fetchInterviews() {
 }
 
 async function handleCreateInterview() {
-  await createInterview(newInterview.value)
+  (await createInterview(newInterview.value)) as unknown as ApiResponse<Interview>
   showCreateDialog.value = false
   fetchInterviews()
 }
 
-async function handleUpdateResult(interview: Interview, result: 'pending' | 'pass' | 'fail') {
+async function handleUpdateResult(interview: Interview, result: InterviewResult) {
   await updateInterviewResult(interview.id, result)
   interview.result = result
 }
@@ -89,14 +90,14 @@ function handleSendNotification(interview: Interview) {
           <button
             v-if="interview.result === 'pending'"
             class="btn-result btn-pass"
-            @click="handleUpdateResult(interview, 'pass')"
+            @click="handleUpdateResult(interview, InterviewResult.PASS)"
           >
             通过
           </button>
           <button
             v-if="interview.result === 'pending'"
             class="btn-result btn-fail"
-            @click="handleUpdateResult(interview, 'fail')"
+            @click="handleUpdateResult(interview, InterviewResult.FAIL)"
           >
             不通过
           </button>

@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getDashboardStats } from '@/api/admin'
-import type { DashboardStats } from '@/types'
+import type { DashboardStats, ApiResponse } from '@/types'
+
+defineOptions({
+  name: 'DashboardPage'
+})
+
 
 const stats = ref<DashboardStats | null>(null)
 const loading = ref(true)
 
 onMounted(async () => {
-  const res = await getDashboardStats()
+  const res = (await getDashboardStats()) as unknown as ApiResponse<DashboardStats>
   stats.value = res.data
   loading.value = false
 })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getJobList, toggleJobStatus, deleteJob as deleteJobApi } from '@/api/job'
-import type { Job } from '@/types'
+import type { Job, ApiResponse, JobListResponse } from '@/types'
 
 const jobs = ref<Job[]>([])
 const loading = ref(false)
@@ -15,11 +15,11 @@ onMounted(() => {
 async function fetchJobs() {
   loading.value = true
   try {
-    const res = await getJobList({
+    const res = (await getJobList({
       keyword: searchKeyword.value,
       page: 1,
       pageSize: 100
-    })
+    })) as unknown as ApiResponse<JobListResponse>
     jobs.value = res.data.list.filter(job => {
       if (statusFilter.value === 'all') return true
       return job.status === statusFilter.value

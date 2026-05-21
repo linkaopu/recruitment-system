@@ -4,6 +4,10 @@ import { RouterLink, useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import type { LoginParams } from '@/types'
 
+defineOptions({
+  name: 'LoginView'
+})
+
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()

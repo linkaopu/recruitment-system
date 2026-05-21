@@ -3,16 +3,21 @@ import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { getHotJobs, getLatestJobs } from '@/api/job'
 import type { Job } from '@/types'
+import type { ApiResponse } from '@/types'
+
+defineOptions({
+  name: 'HomeView'
+})
 
 const hotJobs = ref<Job[]>([])
 const latestJobs = ref<Job[]>([])
 const searchKeyword = ref('')
 
 onMounted(async () => {
-  const [hotRes, latestRes] = await Promise.all([
+  const [hotRes, latestRes] = (await Promise.all([
     getHotJobs(),
     getLatestJobs()
-  ])
+  ])) as unknown as [ApiResponse<Job[]>, ApiResponse<Job[]>]
   hotJobs.value = hotRes.data
   latestJobs.value = latestRes.data
 })
