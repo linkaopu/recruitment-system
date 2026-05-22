@@ -13,11 +13,11 @@ export function logout() {
   return request.post<ApiResponse>('/auth/logout')
 }
 
-export function sendCode(phone: string) {
-  return request.post<ApiResponse>('/auth/send-code', { phone })
+export function sendCode(email: string) {
+  return request.post<ApiResponse>('/auth/send-code', { email })
 }
 
-export function resetPassword(params: { phone: string; code: string; password: string }) {
+export function resetPassword(params: { email: string; code: string; password: string }) {
   return request.post<ApiResponse>('/auth/reset-password', params)
 }
 

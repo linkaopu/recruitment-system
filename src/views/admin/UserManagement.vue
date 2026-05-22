@@ -54,11 +54,6 @@ async function handleDeleteUser(id: number) {
   }
 }
 
-// async function handleToggleStatus(user: User) {
-//   const newStatus = user.email ? 'active' : 'inactive'
-//   await toggleUserStatus(user.id, newStatus)
-// }
-
 function openCreateDialog() {
   resetForm()
   showCreateDialog.value = true

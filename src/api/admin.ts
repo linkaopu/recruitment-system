@@ -18,10 +18,6 @@ export function deleteUser(id: number) {
   return request.delete<ApiResponse>(`/admin/users/${id}`)
 }
 
-export function toggleUserStatus(id: number, status: 'active' | 'inactive') {
-  return request.patch<ApiResponse>(`/admin/users/${id}/status`, { status })
-}
-
 // 部门管理
 export function getDepartments() {
   return request.get<ApiResponse<Department[]>>('/admin/departments')

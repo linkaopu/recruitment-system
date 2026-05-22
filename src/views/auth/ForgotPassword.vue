@@ -6,7 +6,7 @@ import { resetPassword, sendCode } from '@/api/auth'
 const router = useRouter()
 
 const step = ref(1)
-const phone = ref('')
+const email = ref('')
 const code = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
@@ -14,13 +14,13 @@ const loading = ref(false)
 const countdown = ref(0)
 
 async function handleSendCode() {
-  if (!phone.value) {
-    alert('请输入手机号')
+  if (!email.value) {
+    alert('请输入邮箱')
     return
   }
 
   try {
-    await sendCode(phone.value)
+    await sendCode(email.value)
     countdown.value = 60
     const timer = setInterval(() => {
       countdown.value--
@@ -50,7 +50,7 @@ async function handleResetPassword() {
 
   loading.value = true
   try {
-    await resetPassword({ phone: phone.value, code: code.value, password: newPassword.value })
+    await resetPassword({ email: email.value, code: code.value, password: newPassword.value })
     alert('密码重置成功，请重新登录')
     router.push('/login')
   } catch (error) {
@@ -72,7 +72,7 @@ async function handleResetPassword() {
       <div class="steps">
         <div class="step" :class="{ active: step >= 1, completed: step > 1 }">
           <span class="step-num">1</span>
-          <span class="step-text">验证手机</span>
+          <span class="step-text">验证邮箱</span>
         </div>
         <div class="step" :class="{ active: step >= 2, completed: step > 2 }">
           <span class="step-num">2</span>
@@ -86,8 +86,8 @@ async function handleResetPassword() {
 
       <form @submit.prevent class="form">
         <div v-if="step === 1" class="form-group">
-          <label>手机号</label>
-          <input v-model="phone" type="tel" placeholder="请输入注册手机号" />
+          <label>邮箱</label>
+          <input v-model="email" type="email" placeholder="请输入注册邮箱" />
           <button type="button" class="btn-primary" @click="handleSendCode">下一步</button>
         </div>
 

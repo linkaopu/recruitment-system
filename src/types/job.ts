@@ -1,4 +1,15 @@
 // ==================== 职位相关 ====================
+// 部门信息
+export interface Department {
+    id: number
+    name: string
+    code: string
+    description?: string
+    createdAt: string
+    updatedAt: string
+}
+
+
 // 职位信息
 export interface Job {
     id: number

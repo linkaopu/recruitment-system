@@ -1,13 +1,6 @@
 // ==================== 系统管理相关 ====================
 // 系统设置
-export interface Department {
-    id: number
-    name: string
-    code: string
-    description?: string
-    createdAt: string
-    updatedAt: string
-}
+
 
 // 系统日志
 export interface SystemLog {
@@ -16,7 +9,7 @@ export interface SystemLog {
     username: string
     action: string
     ip: string
-    userAgent: string
+    userAgent: string // 用户代理
     createdAt: string
 }
 
