@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { register } from '@/api/auth'
+import { register, sendCode } from '@/api/auth'
 import type { RegisterParams } from '@/types'
 import { UserRole } from '@/types'
 
@@ -12,7 +12,7 @@ defineOptions({
 const router = useRouter()
 
 
-const form = ref<RegisterParams>({
+const form = ref<Omit<RegisterParams, 'code'>>({
   username: '',
   password: '',
   email: '',
@@ -21,16 +21,41 @@ const form = ref<RegisterParams>({
 })
 const confirmPassword = ref('')
 const loading = ref(false)
+const emailCode = ref('')
+const countdown = ref(0)
+
+async function handleSendEmailCode() {
+  if (!form.value.email) {
+    alert('请先输入邮箱')
+    return
+  }
+  try {
+    await sendCode(form.value.email)
+    countdown.value = 60
+    const timer = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+  } catch (error) {
+    console.error('Send code failed:', error)
+  }
+}
 
 async function handleRegister() {
   if (form.value.password !== confirmPassword.value) {
     alert('两次输入的密码不一致')
     return
   }
+  if (!emailCode.value) {
+    alert('请输入邮箱验证码')
+    return
+  }
 
   loading.value = true
   try {
-    await register(form.value)
+    await register({ ...form.value, code: emailCode.value })
     alert('注册成功，请登录')
     router.push('/login')
   } catch (error) {
@@ -66,7 +91,6 @@ async function handleRegister() {
             v-model="form.phone"
             type="tel"
             placeholder="请输入手机号"
-            required
           />
         </div>
 
@@ -78,6 +102,21 @@ async function handleRegister() {
             placeholder="请输入邮箱"
             required
           />
+        </div>
+
+        <div class="form-group">
+          <label>邮箱验证码</label>
+          <div class="code-group">
+            <input
+              v-model="emailCode"
+              type="text"
+              placeholder="请输入验证码"
+              required
+            />
+            <button type="button" class="code-btn" :disabled="countdown > 0" @click="handleSendEmailCode">
+              {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
+            </button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -206,6 +245,35 @@ async function handleRegister() {
 .role-option input {
   width: auto;
   cursor: pointer;
+}
+
+.code-group {
+  display: flex;
+  gap: 12px;
+}
+
+.code-group input {
+  flex: 1;
+}
+
+.code-btn {
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.code-btn:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.code-btn:hover:not(:disabled) {
+  background: #e6e6e6;
 }
 
 .btn-register {

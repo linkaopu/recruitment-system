@@ -10,8 +10,8 @@ export enum UserRole {
 export interface User {
     id: number
     username: string
-    email: string
     phone: string
+    email: string
     role: UserRole  // 用户角色
     avatar?: string // 头像URL
     createdAt: string // 创建时间
@@ -22,7 +22,7 @@ export interface User {
 export interface LoginParams {
     username: string
     password: string
-    type?: 'account' | 'phone' // 账号密码或手机验证码
+    type?: 'account' | 'email' // 账号密码或邮箱验证码
     code?: string // 验证码
 }
 
@@ -33,7 +33,7 @@ export interface RegisterParams {
     email: string
     phone: string
     role: UserRole  // 用户角色
-    code?: string // 验证码
+    code: string // 邮箱验证码
 }
 
 

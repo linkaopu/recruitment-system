@@ -148,7 +148,7 @@ function getRoleText(role: UserRole) {
             <input v-model="formData.email" type="email" placeholder="请输入邮箱" />
           </div>
           <div class="form-group">
-            <label>手机号 <span class="required">*</span></label>
+            <label>手机号</label>
             <input v-model="formData.phone" type="tel" placeholder="请输入手机号" />
           </div>
           <div class="form-group">

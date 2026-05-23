@@ -35,8 +35,8 @@ async function fetchJobs() {
   loading.value = true
   try {
     const res = (await getJobList(filters.value)) as unknown as ApiResponse<JobListResponse>
-    jobs.value = res.data.list
-    total.value = res.data.total
+    jobs.value = res.data?.list || []
+    total.value = res.data?.total || 0
   } finally {
     loading.value = false
   }

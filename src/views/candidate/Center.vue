@@ -37,7 +37,7 @@ async function fetchApplications() {
   loading.value = true
   try {
     const res = (await getMyApplications()) as unknown as ApiResponse<PageResponse<Application>>
-    applications.value = res.data.list
+    applications.value = res.data?.list || []
   } finally {
     loading.value = false
   }

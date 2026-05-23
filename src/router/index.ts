@@ -164,15 +164,14 @@ router.replace = function replace(location) {
 }
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   // 设置页面标题
   document.title = to.meta.title ? `${to.meta.title} - 招聘系统` : '招聘系统'
 
   // 检查是否需要登录
   const token = localStorage.getItem('token')
   if (to.meta.requiresAuth && !token) {
-    next({ name: 'Login', query: { redirect: to.fullPath } })
-    return
+    return { name: 'Login', query: { redirect: to.fullPath } }
   }
 
   // 检查角色权限
@@ -181,12 +180,11 @@ router.beforeEach((to, from, next) => {
     const user = JSON.parse(userStr)
     const requiredRoles = to.meta.roles as string[]
     if (requiredRoles && !requiredRoles.includes(user.role)) {
-      next({ name: 'Home' })
-      return
+      return { name: 'Home' }
     }
   }
 
-  next()
+  return true
 })
 
 export default router

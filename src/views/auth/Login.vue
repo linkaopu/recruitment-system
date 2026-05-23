@@ -12,7 +12,7 @@ const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 
-const loginType = ref<'account' | 'phone'>('account')
+const loginType = ref<'account' | 'email'>('account')
 const form = ref<LoginParams>({
   username: '',
   password: '',
@@ -47,8 +47,8 @@ async function handleLogin() {
         <button :class="{ active: loginType === 'account' }" @click="loginType = 'account'">
           账号登录
         </button>
-        <button :class="{ active: loginType === 'phone' }" @click="loginType = 'phone'">
-          手机登录
+        <button :class="{ active: loginType === 'email' }" @click="loginType = 'email'">
+          邮箱登录
         </button>
       </div>
 
@@ -64,8 +64,8 @@ async function handleLogin() {
         <div v-else class="form-group">
           <input
             v-model="form.username"
-            type="tel"
-            placeholder="请输入手机号"
+            type="email"
+            placeholder="请输入邮箱"
             required
           />
         </div>

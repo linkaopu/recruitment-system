@@ -21,7 +21,7 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver({
         importStyle: false,
-        directives: false, // 👈 这一行是关键！彻底关闭指令自动导入
+        directives: true, // 👈 这一行是关键！彻底关闭指令自动导入
       })],
     }),
     
